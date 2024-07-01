@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
-const port = 3000;
 const morgan = require("morgan");
 
 app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
+app.use("/", (req, res, next) => {
   res.send("Hello World!");
+  next();
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+module.exports = app;
