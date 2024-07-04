@@ -1,12 +1,10 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const userRouter = require("./routes/userRoutes");
 
 app.use(morgan("dev"));
 
-app.use("/", (req, res, next) => {
-  res.send("Hello World!");
-  next();
-});
+app.use("/api/users", userRouter);
 
 module.exports = app;
