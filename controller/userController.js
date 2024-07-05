@@ -40,7 +40,7 @@ exports.getUserById = async (req, res, next) => {
 exports.deleteUserById = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({
+    res.status(204).json({
       Status: "Success",
     });
   } catch (err) {
