@@ -31,6 +31,11 @@ const userScheme = new mongoose.Schema(
         message: "Passwords are not the same!",
       },
     },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
   },
   { versionKey: false },
   { collection: "users" }
@@ -41,9 +46,13 @@ userScheme.pre("save", async function (next) {
 
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
+
   next();
 });
 
-const User = mongoose.model("User", userScheme);
+userScheme.methods.checkPassword = async function (enteredPass, userPass) {
+  return await bcrypt.compare(enteredPass, userPass);
+};
 
+const User = mongoose.model("User", userScheme);
 module.exports = User;

@@ -8,8 +8,10 @@ router.route("/").get(userController.getAllUsers);
 router
   .route("/:id")
   .get(userController.getUserById)
-  .delete(userController.deleteUserById);
-
-router.post("/signup", authController.createUser);
+  .delete(
+    authController.protect,
+    authController.restrictedTo("admin"),
+    userController.deleteUserById
+  );
 
 module.exports = router;
