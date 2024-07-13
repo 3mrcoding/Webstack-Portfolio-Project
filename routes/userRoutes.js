@@ -1,17 +1,30 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
 
-const userController = require("../controller/userController");
-const authController = require("../controller/authController");
+const userController = require('../controller/userController');
+const authController = require('../controller/authController');
 
-router.route("/").get(userController.getAllUsers);
 router
-  .route("/:id")
-  .get(userController.getUserById)
+  .route('/')
+  .get(
+    authController.protect,
+    authController.restrictedTo('admin'),
+    userController.getAllUsers
+  );
+router
+  .route('/:id')
+  .get(
+    authController.protect,
+    authController.restrictedTo('admin'),
+    userController.getUserById
+  )
   .delete(
     authController.protect,
-    authController.restrictedTo("admin"),
+    authController.restrictedTo('admin'),
     userController.deleteUserById
   );
+
+router.route('/forgetpassword').patch(authController.forgetPass);
 
 module.exports = router;

@@ -1,19 +1,19 @@
-const app = require("./app");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const app = require('./app');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 const port = process.env.PORT || 3000;
 
 // Define Environment Variables
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: './config.env' });
 
 // Connecting DataBase
 const DB = process.env.DATABASE.replace(
-  "<password>",
+  '<password>',
   process.env.DATABASE_PASSWORD
 );
 mongoose.connect(DB).then(() => {
-  console.log("Connected to MongoDB");
+  console.log('Connected to MongoDB');
 });
 
 //Connecting Server
