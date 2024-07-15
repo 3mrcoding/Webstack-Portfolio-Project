@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/userModel');
 const sendEmail = require('../util/email');
 
@@ -74,6 +75,11 @@ exports.protect = async (req, res, next) => {
     if (!currentUser) return next(new Error('This user is not Exist'));
 
     // 4) verfiy password hasn't changed
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new Error('User recently changed password! Please log in again.')
+      );
+    }
 
     req.user = currentUser;
     next();
@@ -103,7 +109,7 @@ exports.forgetPass = async (req, res, next) => {
 
     const resetURL = `${req.protocol}://${req.get(
       'host'
-    )}/api/users/forgetpassword/${resetToken}`;
+    )}/api/users/resetpassword/${resetToken}`;
 
     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
@@ -128,4 +134,38 @@ exports.forgetPass = async (req, res, next) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+exports.resetPass = async (req, res, next) => {
+  try {
+    // 1- hash the token in the link!
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    // 2- find the user from the token!
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() }
+    });
+    if (!user) return next(new Error('The token is expired!'));
+
+    // 3- change the user password and save!
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    // 4- return the resposne to the client!
+    const token = signToken(user._id);
+    res.status(201).json({
+      Status: 'Success',
+      token
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  next();
 };

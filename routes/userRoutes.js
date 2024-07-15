@@ -26,5 +26,6 @@ router
   );
 
 router.route('/forgetpassword').patch(authController.forgetPass);
+router.route('/resetpassword/:token').patch(authController.resetPass);
 
 module.exports = router;

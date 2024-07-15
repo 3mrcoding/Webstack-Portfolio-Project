@@ -38,7 +38,8 @@ const userScheme = new mongoose.Schema(
       default: 'user'
     },
     passwordResetToken: String,
-    passwordResetExpires: Date
+    passwordResetExpires: Date,
+    passwordChangedAt: Date
   },
   { versionKey: false },
   { collection: 'users' }
@@ -50,6 +51,13 @@ userScheme.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
 
+  next();
+});
+
+userScheme.pre('save', async function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now();
   next();
 });
 
