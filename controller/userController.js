@@ -48,3 +48,39 @@ exports.deleteUserById = async (req, res, next) => {
   }
   next();
 };
+
+exports.getMe = async (req, res, next) => {
+  try {
+    res.status(200).json({
+      status: 'Success',
+      User: req.user
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.updateMe = async (req, res, next) => {
+  try {
+    if (req.body.password || req.body.passwordConfirm)
+      return next(new Error('Invalid request'));
+
+    const reqKeys = Object.keys(req.body);
+
+    reqKeys.forEach(key => {
+      req.user[key] = req.body[key];
+    });
+
+    req.user.save();
+    res.status(200).json({
+      status: 'Success',
+      User: req.user
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: 'Error',
+      message: err.message
+    });
+  }
+};

@@ -13,7 +13,7 @@ router
     userController.getAllUsers
   );
 router
-  .route('/:id')
+  .route('/id/:id')
   .get(
     authController.protect,
     authController.restrictedTo('admin'),
@@ -27,5 +27,11 @@ router
 
 router.route('/forgetpassword').patch(authController.forgetPass);
 router.route('/resetpassword/:token').patch(authController.resetPass);
-
+router
+  .route('/me')
+  .get(authController.protect, userController.getMe)
+  .patch(authController.protect, userController.updateMe);
+router
+  .route('/me/updatePass')
+  .patch(authController.protect, authController.updatePass);
 module.exports = router;

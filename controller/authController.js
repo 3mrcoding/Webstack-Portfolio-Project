@@ -169,3 +169,31 @@ exports.resetPass = async (req, res, next) => {
   }
   next();
 };
+
+exports.updatePass = async (req, res, next) => {
+  try {
+    const currentUser = await User.findOne({ email: req.user.email }).select(
+      '+password'
+    );
+    if (
+      !(await currentUser.checkPassword(
+        req.body.currectPass,
+        currentUser.password
+      ))
+    )
+      return next(new Error('Your entered password is wrong!'));
+
+    currentUser.password = req.body.newPassword;
+    currentUser.passwordConfirm = req.body.newPasswordConfirm;
+    await currentUser.save();
+
+    const token = signToken(currentUser._id);
+    res.status(201).json({
+      Status: 'Success',
+      token
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  next();
+};
