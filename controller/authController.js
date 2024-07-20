@@ -187,13 +187,19 @@ exports.updatePass = async (req, res, next) => {
     currentUser.passwordConfirm = req.body.newPasswordConfirm;
     await currentUser.save();
 
-    const token = signToken(currentUser._id);
     res.status(201).json({
       Status: 'Success',
-      token
+      message: 'Your password changed successfully, please login!'
     });
   } catch (err) {
     console.log(err);
   }
   next();
+};
+
+exports.deleteMe = async (req, res, next) => {
+  try {
+  } catch (err) {
+    console.log(err);
+  }
 };

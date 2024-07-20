@@ -1,5 +1,13 @@
 const User = require('../models/userModel');
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
@@ -62,19 +70,29 @@ exports.getMe = async (req, res, next) => {
 
 exports.updateMe = async (req, res, next) => {
   try {
-    if (req.body.password || req.body.passwordConfirm)
-      return next(new Error('Invalid request'));
+    console.log(req.user._id);
+    if (req.body.password || req.body.passwordConfirm) {
+      return next(
+        new Error(
+          'This route is not for password updates. Please use /me/updatePass.'
+        )
+      );
+    }
 
-    const reqKeys = Object.keys(req.body);
+    const filteredBody = filterObj(req.body, 'name', 'email');
 
-    reqKeys.forEach(key => {
-      req.user[key] = req.body[key];
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      filteredBody,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
 
-    req.user.save();
     res.status(200).json({
       status: 'Success',
-      User: req.user
+      User: updatedUser
     });
   } catch (err) {
     console.log(err);

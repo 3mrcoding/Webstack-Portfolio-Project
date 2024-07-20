@@ -138,5 +138,13 @@
     "password": "admin123",
     "photo": "matthew_photo.png",
     "passwordConfirm": "admin123"
+  },
+  {
+    "name": "admin",
+    "email": "admin@example.com",
+    "password": "admin123",
+    "photo": "admin_photo.png",
+    "passwordConfirm": "admin123",
+    "role": "admin"
   }
 ]
