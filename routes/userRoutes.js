@@ -34,7 +34,7 @@ router
 router
   .route('/me/updatePass')
   .patch(authController.protect, authController.updatePass);
-// router
-//   .route('/me/delete')
-//   .delete(authController.protect, authController.deleteMe);
+router
+  .route('/me/delete')
+  .delete(authController.protect, authController.deleteMe);
 module.exports = router;

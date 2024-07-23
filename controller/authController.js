@@ -165,9 +165,10 @@ exports.updatePass = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.deleteMe = async (req, res, next) => {
-//   try {
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+exports.deleteMe = async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+  res.status(204).json({
+    status: 'Success',
+    data: null
+  });
+};
