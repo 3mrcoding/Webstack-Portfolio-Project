@@ -19,4 +19,5 @@ mongoose.connect(DB).then(() => {
 //Connecting Server
 const server = app.listen(port, () => {
   console.log(`App listening on port ${port}`);
+  console.log('Running Environment:', process.env.NODE_ENV);
 });

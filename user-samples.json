@@ -65,9 +65,9 @@
   {
     "name": "James Anderson",
     "email": "james.anderson@example.com",
-    "password": "letmein",
+    "password": "letmein1234",
     "photo": "james_photo.png",
-    "passwordConfirm": "letmein"
+    "passwordConfirm": "letmein1234"
   },
   {
     "name": "Patricia Thomas",

@@ -7,7 +7,7 @@ const userScheme = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'User Must Have a Name!']
+      unique: [true, 'This Name used in another account!']
     },
     email: {
       type: String,
@@ -19,6 +19,7 @@ const userScheme = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'User Must Enter a Password!'],
+      minlength: [8, 'Password must be at least 8 Characters'],
       select: false
     },
     photo: String,
