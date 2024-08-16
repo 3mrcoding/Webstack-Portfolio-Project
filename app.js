@@ -4,9 +4,12 @@ const app = express();
 const morgan = require('morgan');
 const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
+const cartRouter = require('./routes/cartRoutes');
 const authRouter = require('./routes/authRoutes');
 const AppError = require('./util/AppError');
 const errController = require('./controller/errController');
+const authController = require('./controller/authController');
+const cartController = require('./controller/cartController');
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -14,6 +17,12 @@ app.use(morgan('dev'));
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/prdoucts', productRouter);
+app.use(
+  '/api/cart',
+  authController.protect,
+  cartController.checkCart,
+  cartRouter
+);
 app.all('*', (req, res, next) => {
   next(new AppError('Requested Route not found!', 404));
 });
