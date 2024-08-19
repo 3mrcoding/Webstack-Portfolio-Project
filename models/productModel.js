@@ -1,87 +1,86 @@
-const mongoose = require("mongoose");
-const { trim } = require("validator");
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "A product must have a name"],
+      required: [true, 'A product must have a name'],
       trim: true,
-      unique: true,
+      unique: true
     },
     description: {
       type: String,
-      required: [true, "A product must have a description"],
-      trim: true,
+      required: [true, 'A product must have a description'],
+      trim: true
     },
     category: {
       type: String,
-      default: "General",
+      default: 'General'
     },
     price: {
       type: String,
-      required: [true, "product must have a price"],
+      required: [true, 'product must have a price']
     },
     discountPercentage: {
       type: Number,
-      default: 1,
+      default: 1
     },
     rating: {
       type: Number,
-      default: "NaN",
+      default: 'NaN'
     },
     stock: {
-      type: Number,
+      type: Number
     },
     images: [String],
     returnPolicy: {
       type: String,
-      default: "15 days return policy",
+      default: '15 days return policy'
     },
     minimumOrderQuantity: {
       type: Number,
-      default: 1,
+      default: 1
     },
     metadate: {
       createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now()
       },
       updatedAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now()
       },
       barcode: {
         type: String,
-        default: "2817839095220",
+        default: '2817839095220'
       },
       qrCode: {
         type: String,
-        default: "https://assets.dummyjson.com/public/qr-code.png",
-      },
+        default: 'https://assets.dummyjson.com/public/qr-code.png'
+      }
     },
     warrantyInformation: {
       type: String,
-      default: "No warranty",
+      default: 'No warranty'
     },
     shippingInformation: {
       type: String,
-      default: "Ships in 10-12 business days",
-    },
+      default: 'Ships in 10-12 business days'
+    }
   },
   {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toObject: { virtuals: true }
   }
 );
 
 // Virtual populate for Review model
-productSchema.virtual("reviews", {
-  ref: "Review",
-  foreignField: "prodcut",
-  localField: "_id",
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'product',
+  localField: '_id'
 });
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

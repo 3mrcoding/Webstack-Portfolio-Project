@@ -1,6 +1,6 @@
-const Review = require("./../models/reviewModel");
-const catchAsync = require("./../util/AsyncCatch");
-const factory = require("./../controller/handlerFactory");
+const Review = require('./../models/reviewModel');
+const catchAsync = require('./../util/AsyncCatch');
+const factory = require('./../controller/handlerFactory');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
@@ -9,11 +9,11 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   const reviews = await Review.find(filter);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     results: reviews.length,
     date: {
-      reviews,
-    },
+      reviews
+    }
   });
 });
 
@@ -25,10 +25,10 @@ exports.createReview = catchAsync(async (req, res, next) => {
   const newReview = await Review.create(req.body);
 
   res.status(201).json({
-    status: "success",
+    status: 'success',
     date: {
-      review: newReview,
-    },
+      review: newReview
+    }
   });
 });
 

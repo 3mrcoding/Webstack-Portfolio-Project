@@ -9,6 +9,7 @@ router
   .route('/product/:id')
   .patch(cartController.modifyCartQunt)
   .delete(cartController.deleteCartItem)
-  .put(cartController.addCartItem);
+  .post(cartController.addCartItem);
 
+router.route('/order').post(cartController.createOrder);
 module.exports = router;
