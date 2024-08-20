@@ -19,7 +19,7 @@ const orderScheme = new mongoose.Schema(
           required: true,
           min: 0
         },
-        image: String,
+        image: [String],
         quantity: {
           type: Number,
           required: true,

@@ -1,11 +1,9 @@
 const Cart = require('../models/cartModel');
-const Order = require('../models/orderModel');
 
 const catchAsync = require('../util/AsyncCatch');
 
 exports.checkCart = catchAsync(async (req, res, next) => {
   const cart = await Cart.find({ userId: req.user.id });
-
   req.cart = cart;
 
   if (cart.length === 0) {
@@ -71,32 +69,5 @@ exports.addCartItem = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     status: 'Success',
     message: 'Product Added!'
-  });
-});
-
-exports.createOrder = catchAsync(async (req, res, next) => {
-  const { userId, items } = req.cart[0];
-  const {
-    shippingTracking,
-    orderStatus,
-    shippingAddress,
-    telephone,
-    Username
-  } = req.body;
-  console.log(userId, items);
-  // const orderKeys = ['name', 'price', 'description', 'images', 'quantity'];
-  const newOrder = await Order.create({
-    userId,
-    items,
-    shippingTracking,
-    orderStatus,
-    shippingAddress,
-    telephone,
-    Username
-  }).populate('items');
-
-  res.status(200).json({
-    status: 'succeess',
-    data: newOrder
   });
 });
