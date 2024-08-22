@@ -2,7 +2,7 @@ const Order = require("../models/orderModel");
 const catchAsync = require("../util/AsyncCatch");
 const AppError = require("../util/AppError");
 
-// creating an order based on the user's cart
+// creating an order based on the user's cart.
 exports.createOrder = catchAsync(async (req, res, next) => {
   // It extracts necessary order details from request body.
   const { shippingAddress, telephone, Username } = req.body;
