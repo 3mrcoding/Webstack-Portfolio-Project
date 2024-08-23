@@ -22,7 +22,9 @@ exports.checkCart = catchAsync(async (req, res, next) => {
 exports.getAllCartItems = catchAsync(async (req, res, next) => {
   res.status(200).json({
     Status: 'Success',
-    Results: req.cart[0].items.length,
+    Results: req.cart[0].items.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0),
     TotalCost: req.cart[0].totalAmount,
     Data: {
       cart: req.cart[0].items

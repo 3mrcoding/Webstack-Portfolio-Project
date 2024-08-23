@@ -29,7 +29,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
 exports.getOrders = catchAsync(async (req, res, next) => {
   const orders = await Order.find();
-  if (!orders) {
+
+  if (orders.length === 0) {
     return next(new AppError('No orders found', 404));
   }
 
@@ -39,24 +40,11 @@ exports.getOrders = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getOrderStatus = catchAsync(async (req, res, next) => {
-  const order = await Order.find(req.params.id);
-
-  if (!order) {
-    return next(new AppError('No order found with that ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'Success',
-    orderStatus: order.orderStatus
-  });
-});
-
 exports.getOrderHistory = catchAsync(async (req, res, next) => {
   const order = await Order.find({ userId: req.user.id });
 
-  if (!order) {
-    return next(new AppError('No order found with that ID', 404));
+  if (order.length === 0) {
+    return next(new AppError('No order found', 404));
   }
 
   res.status(200).json({
@@ -80,6 +68,7 @@ exports.modifyOrderStatus = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'Success',
-    orderStatus: order.orderStatus
+    orderStatus: order.orderStatus,
+    shippingTracking: order.shippingTracking
   });
 });
