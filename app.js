@@ -26,7 +26,7 @@ app.use(
   cartController.checkCart,
   cartRouter
 );
-app.use('/api/order', orderRouter);
+app.use('/api/order', authController.protect, orderRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError('Requested Route not found!', 404));

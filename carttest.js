@@ -37,7 +37,7 @@ const newCart = new Cart({
 newCart
   .save()
   .then(cart => {
-    console.log('Cart saved:', cart);
+    // console.log('Cart saved:', cart);
     process.exit();
   })
   .catch(error => {

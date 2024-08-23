@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const Cart = require('./cartModel');
 
 const userScheme = new mongoose.Schema(
   {
@@ -71,6 +72,10 @@ userScheme.pre(/^find/, function(next) {
   // this points to the current query
   this.find({ active: { $ne: false } });
   next();
+});
+
+userScheme.post('save', async function() {
+  await Cart.create({ userId: this.id });
 });
 
 userScheme.methods.checkPassword = async function(enteredPass, userPass) {

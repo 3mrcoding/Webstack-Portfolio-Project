@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Cart = require('./cartModel');
 
 const orderScheme = new mongoose.Schema(
   {
@@ -27,11 +28,7 @@ const orderScheme = new mongoose.Schema(
         }
       }
     ],
-    totalCost: {
-      type: Number,
-      // required: true,
-      min: 0
-    },
+    totalCost: Number,
     shippingTracking: {
       type: String,
       enum: ['Out For Delivery', 'With Courier', 'Shipped', 'Prepaired'],
@@ -43,10 +40,13 @@ const orderScheme = new mongoose.Schema(
       default: 'Ready'
     },
     shippingAddress: {
-      type: String
-      // required: true
+      type: String,
+      required: true
     },
-    telephone: Number,
+    telephone: {
+      type: String,
+      required: true
+    },
     Username: String,
     createdAt: {
       type: Date,
@@ -55,6 +55,29 @@ const orderScheme = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderScheme.pre('save', async function() {
+  const cart = await Cart.findOne({ userId: this.userId }).populate(
+    'items.productId'
+  );
+
+  this.items = cart.items.map(({ productId, quantity }) => ({
+    name: productId.name,
+    price: productId.price,
+    description: productId.description,
+    image: productId.images,
+    quantity
+  }));
+  this.totalCost = cart.totalAmount;
+  cart.items = [];
+  cart.calculateTotalAmount();
+  cart.save();
+});
+
+orderScheme.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Order = mongoose.model('Order', orderScheme);
 

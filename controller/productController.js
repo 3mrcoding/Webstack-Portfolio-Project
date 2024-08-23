@@ -1,6 +1,6 @@
-const Product = require("../models/productModel");
-const catchAsync = require("../util/AsyncCatch");
-const AppError = require("./../util/AppError");
+const Product = require('../models/productModel');
+const catchAsync = require('../util/AsyncCatch');
+const AppError = require('./../util/AppError');
 
 // Retrieve all products from the database
 exports.getallProduct = catchAsync(async (req, res, next) => {
@@ -9,31 +9,29 @@ exports.getallProduct = catchAsync(async (req, res, next) => {
 
   // Send a 200 OK HTTP status response.
   res.status(200).json({
-    status: "success",
+    status: 'success',
     results: product.length,
     date: {
-      product,
-    },
+      product
+    }
   });
 });
 
 // Retrieve a single product from the database by its ID, and populates its associated reviews.
 exports.getProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findById(req.params.productId).populate(
-    "reviews"
-  );
+  const product = await Product.findById(req.params.id).populate('reviews');
 
   // If no product is found.
   if (!product) {
-    return next(new AppError("No product found with that id", 404));
+    return next(new AppError('No product found with that id', 404));
   }
 
   // Send a 200 OK HTTP status response.
   res.status(200).json({
-    status: "success",
+    status: 'success',
     date: {
-      product,
-    },
+      product
+    }
   });
 });
 
@@ -43,10 +41,10 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
   // Send a 201 Created HTTP status response.
   res.status(201).json({
-    status: "success",
+    status: 'success',
     date: {
-      product: newProduct,
-    },
+      product: newProduct
+    }
   });
 });
 
@@ -57,16 +55,16 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     req.body,
     {
       new: true,
-      runValidators: true,
+      runValidators: true
     }
   );
 
   // Send a 200 OK HTTP status response.
   res.status(200).json({
-    status: "success",
+    status: 'success',
     date: {
-      product,
-    },
+      product
+    }
   });
 });
 
@@ -76,12 +74,12 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
 
   // If no product is found.
   if (!product) {
-    return next(new AppError("No product found with that id", 404));
+    return next(new AppError('No product found with that id', 404));
   }
 
   // Send a 204 No Content HTTP status response.
   res.status(204).json({
-    status: "success",
-    data: null,
+    status: 'success',
+    data: null
   });
 });
